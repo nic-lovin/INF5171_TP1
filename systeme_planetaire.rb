@@ -250,7 +250,7 @@ class SystemePlanetaire
   def calculer_forces_seq
     planetes_force = []
     planetes.each do |planet|
-      planetes.each { |autre| planetes_force +=  planet.force_de(autre) unless autre.equal?(planet)}
+      planetes.each { |autre| planetes_force[planet] +=  planet.force_de(autre) unless autre.equal?(planet)}
     end
   end
 
