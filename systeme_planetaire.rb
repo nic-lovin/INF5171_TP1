@@ -248,7 +248,10 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-    # A COMPLETER.
+    planetes_force = []
+    planetes.each do |planet|
+      planetes.each { |autre| planetes_force +=  planet.force_de(autre) unless autre.equal?(planet)}
+    end
   end
 
   def calculer_forces_par_fj_fin
