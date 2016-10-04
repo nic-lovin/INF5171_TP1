@@ -249,9 +249,11 @@ class SystemePlanetaire
 
   def calculer_forces_seq
     planetes_force = []
+    return planetes_force if planetes.size == 0
     planetes.each do |planet|
-      planetes.each { |autre| planetes_force[planet] +=  planet.force_de(autre) unless autre.equal?(planet)}
+      planetes.each { |autre| planetes_force << planet.force_de(autre) unless autre.equal?(planet)}
     end
+    planetes_force
   end
 
   def calculer_forces_par_fj_fin
