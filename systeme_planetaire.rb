@@ -248,11 +248,11 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-    planetes_force = Array.new([])
     return planetes_force if planetes.size == 0
-    planetes.each_with_index do |planet, index|
+    planetes_force = Array.new([])
+    planetes.each do |planete|
 	    vect = Vector[0, 0]
-	    planetes.each { |autre| x += planet.force_de(autre) unless autre.equal?(planet)}
+	    planetes.each { |autre| vect += planete.force_de(autre) unless autre.equal?(planete)}
 	    planetes_force << vect
     end
     planetes_force
@@ -303,6 +303,8 @@ class SystemePlanetaire
 
 
   def deplacer_seq( forces, dt )
+  return if planetes.size == 0
+  return if planetes.size != forces.size
 	planetes.each_with_index { |planete, index|
 		planete.deplacer(forces[index], dt) unless forces[index].nil?
 	}
