@@ -259,8 +259,8 @@ class SystemePlanetaire
 
 
   def calculer_forces_par_fj_fin
-    futures = planetes.map do { |planete| PRuby.future { calcule_force_planet(planete)} }
-      futures.map(&:value)      
+    futures = planetes.map { |planete| PRuby.future { calcule_force_planet(planete)} }
+      futures.map(&:value)
   end
 
 
