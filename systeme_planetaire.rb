@@ -251,18 +251,19 @@ class SystemePlanetaire
     planetes_force = Array.new
 
     planetes.each do |planete|
-	    vect = Vector[0, 0]
 	    planetes_force << calcule_force_planet(planete)
     end
     planetes_force
   end
 
-  def calcule_force_planet (planet)
-      planetes.reduce { |vect = Vector[0, 0], planete| vect + planete.force_de(planet) unless planete.equal?(planet)}
+  def calcule_force_planet (planete)
+      vect = Vector[0, 0]
+      planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
   end
 
 
   def calculer_forces_par_fj_fin
+    #calculer_forces_par_fj_fin_ij(0, size -1)
     calculer_forces_seq
   end
 
