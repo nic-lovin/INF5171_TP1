@@ -248,11 +248,19 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-    # A COMPLETER.
+    planetes_force = Array.new
+    return planetes_force if planetes.size == 0
+
+    planetes.each do |planete|
+	    vect = Vector[0, 0]
+	    planetes.each { |autre| vect += planete.force_de(autre) unless autre.equal?(planete)}
+	    planetes_force << vect
+    end
+    planetes_force
   end
 
   def calculer_forces_par_fj_fin
-    # A REMPLACER PAR LA VERSION PARALLELE.
+  #  calculer_forces_par_fj_fin_ij(0, size -1)
     calculer_forces_seq
   end
 
@@ -296,31 +304,34 @@ class SystemePlanetaire
 
 
   def deplacer_seq( forces, dt )
-    # A COMPLETER.
+  return if planetes.size == 0
+  return if planetes.size != forces.size
+	planetes.each_with_index { |planete, index|
+		planete.deplacer(forces[index], dt) unless forces[index].nil?
+	}
   end
 
   def deplacer_par_fj_fin( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_fj_adj( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_fj_cyc( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_sta( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_dyn( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 end
