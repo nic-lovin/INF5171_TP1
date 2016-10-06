@@ -258,8 +258,13 @@ class SystemePlanetaire
     planetes_force
   end
 
+  def calculer_forces_par_fj_fin_ij ( i, j)
+
+
+  end
+
   def calculer_forces_par_fj_fin
-    # A REMPLACER PAR LA VERSION PARALLELE.
+  #  calculer_forces_par_fj_fin_ij(0, size -1)
     calculer_forces_seq
   end
 
@@ -312,26 +317,26 @@ class SystemePlanetaire
 
   def deplacer_par_fj_fin( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_fj_adj( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_fj_cyc( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_sta( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 
   def deplacer_par_dyn( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq
+    deplacer_seq( forces, dt )
   end
 end
