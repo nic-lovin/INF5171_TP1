@@ -248,11 +248,7 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-    planetes_force = Array.new
-    planetes.each do |planete|
-	    planetes_force << calcule_force_planet(planete)
-    end
-    planetes_force
+    planetes.map  { |planete| calcule_force_planet(planete) } 
   end
 
   def calcule_force_planet (planete)
