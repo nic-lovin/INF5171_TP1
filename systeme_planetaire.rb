@@ -258,7 +258,7 @@ class SystemePlanetaire
   end
 
   def calcule_force_planet (planet)
-      planetes.reduce(0)  { |somme, k| somme + planetes[k].force_de(planet) unless planetes[k].equal?(planet)}
+      planetes.reduce(0)  { |somme, planete| somme + planete.force_de(planet) unless planete.equal?(planet)}
   end
 
 
