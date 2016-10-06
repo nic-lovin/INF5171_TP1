@@ -248,19 +248,19 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-    planetes.map  { |planete| calcule_force_planet(planete) } 
+    planetes.map { |planete| calcule_force_planet(planete) }
   end
 
   def calcule_force_planet (planete)
-      vect = Vector[0, 0]
+      vect = Vector[0, 0] #preduce help
       planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
       vect
   end
 
 
   def calculer_forces_par_fj_fin
-    #calculer_forces_par_fj_fin_ij(0, size -1)
-    calculer_forces_seq
+    futures = planetes.map do { |planete| PRuby.future { calcule_force_planet(planete)} }
+      futures.map(&:value)      
   end
 
 
