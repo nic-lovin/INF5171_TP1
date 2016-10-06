@@ -311,8 +311,8 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_fin( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
+      futures = planetes.each_with_index.map { |planete, index| PRuby.future {planete.deplacer(forces[index], dt) unless forces[index].nil?} }
+      futures.map(&:value)
   end
 
   def deplacer_par_fj_adj( forces, dt )
