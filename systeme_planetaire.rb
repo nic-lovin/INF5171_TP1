@@ -258,8 +258,7 @@ class SystemePlanetaire
   end
 
   def calcule_force_planet (planet)
-      vect = Vector[0, 0]
-      planetes.inject { |vect, planete| vect + planete.force_de(planet) unless planete.equal?(planet)}
+      planetes.reduce { |vect = Vector[0, 0], planete| vect + planete.force_de(planet) unless planete.equal?(planet)}
   end
 
 
