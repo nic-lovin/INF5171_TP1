@@ -256,12 +256,11 @@ class SystemePlanetaire
   end
 
   def calcule_force_planet (planete)
-      (0...planetes.size).reduce(0) do |vect, k|
-      vect = Vector[0,0] if vect.nil?
-      vect + planetes[k].force_de(planete) unless planetes[k].equal?(planete)
-    end
+      vect = Vector[0, 0]
+      planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
       vect
   end
+
 
   def calculer_forces_par_fj_fin
     #calculer_forces_par_fj_fin_ij(0, size -1)
