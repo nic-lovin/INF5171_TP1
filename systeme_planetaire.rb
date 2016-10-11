@@ -305,7 +305,7 @@ class SystemePlanetaire
 
 
   def deplacer_seq( forces, dt )
-  	   deplacer_par_fj_adj_ij(0, planets.size-1,forces, dt)
+  	   deplacer_par_fj_adj_ij(0, planetes.size-1,forces, dt)
   end
 
   def deplacer_par_fj_fin( forces, dt )
