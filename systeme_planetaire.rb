@@ -248,7 +248,7 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-    planetes.map { |planete| calcule_force_planet(planete) }
+      planetes.map { |planete| calcule_force_planet(planete) }
   end
 
   def calcule_force_planet (planete)
@@ -283,6 +283,10 @@ class SystemePlanetaire
     calculer_forces_seq
   end
 
+ def bornes_tranche( k, nb_threads )
+    (k * planetes.size / nb_threads..(k + 1) * planetes.size / nb_threads - 1)
+ end
+
 
   #################################################################
   # Deplace un groupe de planetes selon un ensemble de vecteurs de
@@ -301,28 +305,12 @@ class SystemePlanetaire
 
 
   def deplacer_seq( forces, dt )
-  return if planetes.size == 0
-  return if planetes.size != forces.size
-	planetes.each_with_index { |planete, index|
-		planete.deplacer(forces[index], dt) unless forces[index].nil?
-	}
+  	   deplacer_par_fj_adj_ij(0, planets.size-1,forces, dt)
   end
 
   def deplacer_par_fj_fin( forces, dt )
        futures = planetes.each_with_index.map { |planete, index| PRuby.future {planete.deplacer(forces[index], dt) unless forces[index].nil?} }
        futures.map(&:value)
-   end
-
-   # Produit un Range qui denote les indices de la tranche attribuee au
-   # k-ieme thread, en fonction du nombre de threads (nb_threads) et de
-   # la taille du tableau (size).
-   #
-   # On suppose que la taille du tableau est divisible par le nombre de
-   # threads (pre-condition).
-   #
-   def bornes_tranche( k, nb_threads )
- ##Corriger pour que les cas marchent quand le modulo donne pas 0
-     (k * planetes.size / nb_threads..(k + 1) * planetes.size / nb_threads - 1)
    end
 
    def deplacer_par_fj_adj( forces, dt )
@@ -338,14 +326,7 @@ class SystemePlanetaire
    end
 
    def deplacer_par_fj_adj_ij( i, j, forces, dt )
-         #planetes.each_with_index { |planete, index|
-         #        planete.deplacer(forces[index], dt) unless forces[index].nil?
-         #}
-         (i..j).each do |planete|
-                 (0..planetes.size).each do |index|
-                         planetes[index].deplacer(forces[index], dt) unless forces[index].nil?
-                 end
-         end
+     (i..j).each { |index| planetes[index].deplacer(forces[index], dt) unless forces[index].nil? }
    end
 
   def deplacer_par_fj_cyc( forces, dt )
