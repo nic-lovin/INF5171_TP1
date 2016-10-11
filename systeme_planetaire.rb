@@ -312,13 +312,44 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_fin( forces, dt )
-    deplacer_seq( forces, dt )
-  end
+       futures = planetes.each_with_index.map { |planete, index| PRuby.future {planete.deplacer(forces[index], dt) unless forces[index].nil?} }
+       futures.map(&:value)
+   end
 
-  def deplacer_par_fj_adj( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
-  end
+   # Produit un Range qui denote les indices de la tranche attribuee au
+   # k-ieme thread, en fonction du nombre de threads (nb_threads) et de
+   # la taille du tableau (size).
+   #
+   # On suppose que la taille du tableau est divisible par le nombre de
+   # threads (pre-condition).
+   #
+   def bornes_tranche( k, nb_threads )
+ ##Corriger pour que les cas marchent quand le modulo donne pas 0
+     (k * planetes.size / nb_threads..(k + 1) * planetes.size / nb_threads - 1)
+   end
+
+   def deplacer_par_fj_adj( forces, dt )
+     nb_threads = [PRuby.nb_threads || planetes.size, planetes.size].min
+     futures = (0...nb_threads).map do |k|
+         PRuby.future do
+           bornes = bornes_tranche( k, nb_threads )
+           inf = bornes.begin
+           deplacer_par_fj_adj_ij(inf, bornes.end, forces, dt )
+         end
+     end
+     futures.map(&:value)
+   end
+
+   def deplacer_par_fj_adj_ij( i, j, forces, dt )
+         #planetes.each_with_index { |planete, index|
+         #        planete.deplacer(forces[index], dt) unless forces[index].nil?
+         #}
+         (i..j).each do |planete|
+                 (0..planetes.size).each do |index|
+                         planetes[index].deplacer(forces[index], dt) unless forces[index].nil?
+                 end
+         end
+   end
 
   def deplacer_par_fj_cyc( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
