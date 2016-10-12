@@ -284,16 +284,8 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_fj_cyc
-    nb_threads = [PRuby.nb_threads || planetes.size, planetes.size].min
-    futures = (0...nb_threads).map do |k|
-      PRuby.future(static:1) do
-        bornes = bornes_tranche( k, nb_threads )
-        calculer_forces_par_fj_adj_ij( bornes.begin, bornes.end)
-      end
-    end
-    futures
-      .map(&:value)
-      .reduce (:+)
+    # A REMPLACER PAR LA VERSION PARALLELE.
+    calculer_forces_seq
   end
 
   def calculer_forces_par_sta
