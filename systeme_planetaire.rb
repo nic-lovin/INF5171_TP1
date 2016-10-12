@@ -253,11 +253,12 @@ class SystemePlanetaire
   end
 
   def calcule_force_planet (planete)
-#    vect = Vector[0, 0] #preduce help
-    planetes
-      .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
-      .reduce (:+)
-  #  vect
+    vect = Vector[0, 0] #preduce help
+    planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
+    vect
+    #planetes
+  #    .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
+  #    .reduce (:+)
   end
 
   def calculer_forces_par_fj_fin
