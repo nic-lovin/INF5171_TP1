@@ -248,7 +248,8 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-    planetes.map { |planete| calcule_force_planet(planete) }
+    calculer_forces_par_fj_adj_ij(0, planetes.size-1)
+  #  planetes.map { |planete| calcule_force_planet(planete) }
   end
 
   def calcule_force_planet (planete)
@@ -267,6 +268,9 @@ class SystemePlanetaire
     calculer_forces_seq
   end
 
+  def calculer_forces_par_fj_adj_ij (i,j)
+    (i..j).each { |index| calcule_force_planet(planetes[index]) }
+  end
 
   def calculer_forces_par_fj_cyc
     # A REMPLACER PAR LA VERSION PARALLELE.
