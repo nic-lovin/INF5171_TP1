@@ -289,14 +289,13 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_sta
-    puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
-
-    planetes.pmap(static:true) { |planete| calcule_force_planet(planete) }
+  #  puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
+    planetes.pmap(static:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
   def calculer_forces_par_dyn
     # A REMPLACER PAR LA VERSION PARALLELE.
-    planetes.pmap(dynamic:true) { |planete| calcule_force_planet(planete) }
+    planetes.pmap(dynamic:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
   def bornes_tranche( k, nb_threads )
