@@ -274,8 +274,8 @@ class SystemePlanetaire
       end
     end
     futures
-      .map(&:value)
       .map {|x| x+x }
+      .map(&:value)
   end
 
   def calculer_forces_par_fj_adj_ij (i,j)
