@@ -278,7 +278,7 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_fj_adj_ij (i,j)
-    (i..j).map { |index| array << calcule_force_planet(planetes[index]) }
+    (i..j).map { |index| calcule_force_planet(planetes[index]) }
   end
 
   def calculer_forces_par_fj_cyc
