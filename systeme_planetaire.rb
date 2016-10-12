@@ -289,12 +289,12 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_sta
-    planetes.pmap { |planete| calcule_force_planet(planete) }
+    planetes.pmap (static: taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
   def calculer_forces_par_dyn
     # A REMPLACER PAR LA VERSION PARALLELE.
-    calculer_forces_seq
+    planetes.pmap(dynamic: taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
   def bornes_tranche( k, nb_threads )
