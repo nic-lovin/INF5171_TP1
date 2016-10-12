@@ -28,12 +28,12 @@ class SystemePlanetaire
   #
 
   MODES = [:seq,
-           :par_fj_fin,
-           :par_fj_adj,
-           :par_fj_cyc,
-           :par_sta,
-           :par_dyn,
-          ]
+    :par_fj_fin,
+    :par_fj_adj,
+    :par_fj_cyc,
+    :par_sta,
+    :par_dyn,
+  ]
 
   MODES_AVEC_TAILLE_TACHE = [:par_fj_cyc, :par_sta, :par_dyn]
 
@@ -248,18 +248,18 @@ class SystemePlanetaire
 
 
   def calculer_forces_seq
-      planetes.map { |planete| calcule_force_planet(planete) }
+    planetes.map { |planete| calcule_force_planet(planete) }
   end
 
   def calcule_force_planet (planete)
-      vect = Vector[0, 0] #preduce help
-      planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
-      vect
+    vect = Vector[0, 0] #preduce help
+    planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
+    vect
   end
 
   def calculer_forces_par_fj_fin
     futures = planetes.map { |planete| PRuby.future { calcule_force_planet(planete)} }
-      futures.map(&:value)
+    futures.map(&:value)
   end
 
   def calculer_forces_par_fj_adj
@@ -283,9 +283,9 @@ class SystemePlanetaire
     calculer_forces_seq
   end
 
- def bornes_tranche( k, nb_threads )
+  def bornes_tranche( k, nb_threads )
     (k * planetes.size / nb_threads..(k + 1) * planetes.size / nb_threads - 1)
- end
+  end
 
 
   #################################################################
@@ -319,14 +319,14 @@ class SystemePlanetaire
       PRuby.future do
         bornes = bornes_tranche( k, nb_threads )
         deplacer_par_fj_adj_ij( bornes.begin, bornes.end, forces, dt )
-       end
-     end
+      end
+    end
     futures.map(&:value)
   end
 
-   def deplacer_par_fj_adj_ij( i, j, forces, dt )
-     (i..j).each { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
-   end
+  def deplacer_par_fj_adj_ij( i, j, forces, dt )
+    (i..j).each { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
+  end
 
   def deplacer_par_fj_cyc( forces, dt )
     # A REMPLACER PAR LA VERSION PARALLELE.
