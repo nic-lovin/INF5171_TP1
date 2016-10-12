@@ -297,8 +297,7 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_sta
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    calculer_forces_seq
+    planetes.pmap { |planete| calcule_force_planet(planete) }
   end
 
   def calculer_forces_par_dyn
