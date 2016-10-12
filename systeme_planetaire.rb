@@ -289,7 +289,7 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_sta
-    puts "la valeur de taille_tache: #{taille_tache}"
+    puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
 
     planetes.pmap(static:true) { |planete| calcule_force_planet(planete) }
   end
