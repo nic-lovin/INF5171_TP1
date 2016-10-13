@@ -279,7 +279,7 @@ class SystemePlanetaire
     futures = (0...nb_threads).map do |k|
       PRuby.future do
         bornes = bornes_tranche_taille( k, nb_threads, taille_tache )
-        puts "la liste de range: #{liste} pour le thread #{k}"
+        puts "la liste de range: #{bornes} pour le thread #{k}"
         bornes.reduce { |force, borne| force + calculer_forces_par_fj_adj_ij( borne.begin, borne.end) } unless bornes.nil?
       end
     end
