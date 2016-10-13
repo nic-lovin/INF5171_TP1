@@ -279,7 +279,6 @@ class SystemePlanetaire
     futures = (0...nb_threads).map do |k|
       PRuby.future do
         bornes = bornes_tranche_taille( k, nb_threads )
-        puts "la liste de range: #{bornes} pour le thread #{k}"
         forces = bornes.map { |borne| calculer_forces_par_fj_adj_ij( borne.begin, borne.end) } unless bornes.nil?
         forces.flatten
       end
@@ -359,8 +358,14 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_cyc( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
+    nb_threads = [PRuby.nb_threads || planetes.size, planetes.size].min
+    futures = (0...nb_threads).map do |k|
+      PRuby.future do
+        bornes = bornes_tranche_taille( k, nb_threads )
+        bornes.each { |borne| deplacer_par_fj_adj_ij( borne.begin, borne.end, forces, dt ) } unless bornes.nil?
+      end
+    end
+    futures.map(&:value)
   end
 
   def deplacer_par_sta( forces, dt )
