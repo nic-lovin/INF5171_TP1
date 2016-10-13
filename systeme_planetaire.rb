@@ -249,16 +249,7 @@ class SystemePlanetaire
 
   def calculer_forces_seq
     calculer_forces_par_fj_adj_ij(0, planetes.size-1)
-  #  planetes.map { |planete| calcule_force_planet(planete) }
-  end
-
-  def calcule_force_planet (planete)
-    vect = Vector[0, 0] #preduce help
-    planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
-    vect
-    #planetes
-  #    .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
-  #    .reduce (:+)
+    #  planetes.map { |planete| calcule_force_planet(planete) }
   end
 
   def calculer_forces_par_fj_fin
@@ -275,8 +266,8 @@ class SystemePlanetaire
       end
     end
     futures
-      .map(&:value)
-      .reduce (:+)
+    .map(&:value)
+    .reduce (:+)
   end
 
   def calculer_forces_par_fj_adj_ij (i,j)
@@ -284,12 +275,21 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_fj_cyc
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    calculer_forces_seq
+    nb_threads = [PRuby.nb_threads || planetes.size, planetes.size].min
+    futures = (0...nb_threads).map do |k|
+      PRuby.future do
+        bornes = bornes_tranche_taille( k, nb_threads )
+        forces = bornes.map { |borne| calculer_forces_par_fj_adj_ij( borne.begin, borne.end) } unless bornes.nil?
+        forces.flatten
+      end
+    end
+    futures
+    .map(&:value)
+    .reduce(:+)
   end
 
   def calculer_forces_par_sta
-  #  puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
+    #puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
     planetes.pmap(static:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
@@ -298,8 +298,22 @@ class SystemePlanetaire
     planetes.pmap(dynamic:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
+  def calcule_force_planet (planete)
+    vect = Vector[0, 0] #preduce help
+    planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
+    vect
+    #planetes
+    #    .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
+    #    .reduce (:+)
+  end
+
   def bornes_tranche( k, nb_threads )
     (k * planetes.size / nb_threads..(k + 1) * planetes.size / nb_threads - 1)
+  end
+
+  def bornes_tranche_taille( k, nb_threads )
+    depart = (k)*taille_tache
+    (depart...planetes.size).step((nb_threads-1) * taille_tache).map { |i| i..[i+taille_tache-1, planetes.size-1].min }
   end
 
 
@@ -324,7 +338,7 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_fin( forces, dt )
-    futures = planetes.each_with_index.map { |planete, index| PRuby.future {planete.deplacer(forces[index], dt) unless forces[index].nil?} }
+    futures = planetes.each_index.map { |index| PRuby.future { deplacer_planete_index(index, forces, dt) } }
     futures.map(&:value)
   end
 
@@ -340,21 +354,30 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_adj_ij( i, j, forces, dt )
-    (i..j).each { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
+    (i..j).each { |index| deplacer_planete_index(index, forces, dt) }
   end
 
   def deplacer_par_fj_cyc( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
+    nb_threads = [PRuby.nb_threads || planetes.size, planetes.size].min
+    futures = (0...nb_threads).map do |k|
+      PRuby.future do
+        bornes = bornes_tranche_taille( k, nb_threads )
+        bornes.each { |borne| deplacer_par_fj_adj_ij( borne.begin, borne.end, forces, dt ) } unless bornes.nil?
+      end
+    end
+    futures.map(&:value)
   end
 
   def deplacer_par_sta( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
+    planetes.peach_index(static:taille_tache) { |index| deplacer_planete_index(index, forces, dt) }
   end
 
   def deplacer_par_dyn( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
+    planetes.peach_index(dynamic:taille_tache) { |index| deplacer_planete_index(index, forces, dt) }
   end
+
+  def deplacer_planete_index (index, forces, dt)
+    planetes[index].deplacer( forces[index], dt ) unless forces[index].nil?
+  end
+
 end
