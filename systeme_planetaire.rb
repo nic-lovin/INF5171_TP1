@@ -340,7 +340,7 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_adj_ij( i, j, forces, dt )
-    (i..j).each { |index| deplacer_planete_index (index, forces, dt) }
+    (i..j).each { |index| deplacer_planete_index(index, forces, dt) }
   end
 
   def deplacer_par_fj_cyc( forces, dt )
@@ -353,7 +353,7 @@ class SystemePlanetaire
   end
 
   def deplacer_par_dyn( forces, dt )
-    planetes.peach_index(dynamic:taille_tache) { |index| deplacer_planete_index (index, forces, dt) }
+    planetes.peach_index(dynamic:taille_tache) { |index| deplacer_planete_index(index, forces, dt) }
   end
 
   def deplacer_planete_index (index, forces, dt)
