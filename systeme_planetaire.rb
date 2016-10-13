@@ -279,7 +279,11 @@ class SystemePlanetaire
     futures = (0...nb_threads).map do |k|
       PRuby.future do
         bornes = bornes_tranche_taille( k, nb_threads, taille_tache )
-        bornes.each { |borne| calculer_forces_par_fj_adj_ij( borne.begin, borne.end) }
+        bornes.each { |borne| calculer_forces_par_fj_adj_ij( borne.begin, borne.end) } unless bornes.empty?
+
+        def each(&block)
+
+        end
       end
     end
     futures
@@ -311,10 +315,10 @@ class SystemePlanetaire
   end
 
   def bornes_tranche_taille( k, nb_threads, taille_tache )
-    puts "nombre de thread #{nb_threads} donc saut de #{nb_threads-1 * taille_tache}"
+    puts "nombre de planetes: #{planetes.size}  nombre de thread #{nb_threads} donc saut de #{(nb_threads-1) * taille_tache}"
     depart = (k)*taille_tache
     puts "le depart: #{depart} pour le thread #{k}"
-    liste = (depart..planetes.size).step((nb_threads-1) * taille_tache).map { |i| i..i+taille_tache }
+    liste = (depart...planetes.size).step((nb_threads-1) * taille_tache).map { |i| i...[i+taille_tache, planetes.size].min }
     puts "la liste de range: #{liste} pour le thread #{k}"
   end
 
