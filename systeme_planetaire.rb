@@ -271,7 +271,6 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_fj_adj_ij (i,j)
-    puts "voici i #{i} et j #{j}"
     (i..j).map { |index| calcule_force_planet(planetes[index]) }
   end
 
@@ -280,10 +279,8 @@ class SystemePlanetaire
     futures = (0...nb_threads).map do |k|
       PRuby.future do
         bornes = bornes_tranche_taille( k, nb_threads )
-        force = []
         puts "la liste de range: #{bornes} pour le thread #{k}"
-        bornes.each { |borne| force <<  calculer_forces_par_fj_adj_ij( borne.begin, borne.end) } unless bornes.nil?
-        force.flatten
+        bornes.reduce { |force, borne| force + calculer_forces_par_fj_adj_ij( borne.begin, borne.end) } unless bornes.nil?
       end
     end
     futures
