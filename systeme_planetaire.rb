@@ -252,15 +252,6 @@ class SystemePlanetaire
   #  planetes.map { |planete| calcule_force_planet(planete) }
   end
 
-  def calcule_force_planet (planete)
-    vect = Vector[0, 0] #preduce help
-    planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
-    vect
-    #planetes
-  #    .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
-  #    .reduce (:+)
-  end
-
   def calculer_forces_par_fj_fin
     futures = planetes.map { |planete| PRuby.future { calcule_force_planet(planete)} }
     futures.map(&:value)
@@ -298,6 +289,15 @@ class SystemePlanetaire
     planetes.pmap(dynamic:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
+  def calcule_force_planet (planete)
+    vect = Vector[0, 0] #preduce help
+    planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
+    vect
+    #planetes
+  #    .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
+  #    .reduce (:+)
+  end
+
   def bornes_tranche( k, nb_threads )
     (k * planetes.size / nb_threads..(k + 1) * planetes.size / nb_threads - 1)
   end
@@ -324,7 +324,7 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_fin( forces, dt )
-    futures = planetes.each_with_index.map { |planete, index| PRuby.future {planete.deplacer(forces[index], dt) unless forces[index].nil?} }
+    futures = planetes.each_index.map { |index| PRuby.future {deplacer_planete_index (index, forces, dt)} }
     futures.map(&:value)
   end
 
@@ -340,7 +340,7 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_adj_ij( i, j, forces, dt )
-    (i..j).each { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
+    (i..j).each { |index| deplacer_planete_index (index, forces, dt) }
   end
 
   def deplacer_par_fj_cyc( forces, dt )
@@ -349,10 +349,15 @@ class SystemePlanetaire
   end
 
   def deplacer_par_sta( forces, dt )
-    planetes.peach_index(static:taille_tache) { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
+    planetes.peach_index(static:taille_tache) { |index| deplacer_planete_index(index, forces, dt) }
   end
 
   def deplacer_par_dyn( forces, dt )
-    planetes.peach_index(dynamic:taille_tache) { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
+    planetes.peach_index(dynamic:taille_tache) { |index| deplacer_planete_index (index, forces, dt) }
   end
+
+  def deplacer_planete_index (index, forces, dt)
+    planetes[index].deplacer( forces[index], dt ) unless forces[index].nil?
+  end
+
 end
