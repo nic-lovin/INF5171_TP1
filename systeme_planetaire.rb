@@ -271,6 +271,7 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_fj_adj_ij (i,j)
+    puts "voici i #{i} et j #{j}"
     (i..j).map { |index| calcule_force_planet(planetes[index]) }
   end
 
@@ -282,7 +283,7 @@ class SystemePlanetaire
         force = []
         puts "la liste de range: #{bornes} pour le thread #{k}"
         bornes.each { |borne| force <<  calculer_forces_par_fj_adj_ij( borne.begin, borne.end) } unless bornes.nil?
-        force.reduce(:concat)
+        force.flatten
       end
     end
     futures
