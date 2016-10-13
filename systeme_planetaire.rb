@@ -311,9 +311,10 @@ class SystemePlanetaire
   end
 
   def bornes_tranche_taille( k, nb_threads, taille_tache )
+    puts "nombre de thread #{nb_threads} donc saut de #{nb_threads-1 * taille_tache}"
     depart = (k)*taille_tache
     puts "le depart: #{depart} pour le thread #{k}"
-    liste = (depart..planetes.size).step(nb_threads-1 * taille_tache).map { |i| i..i+taille_tache }
+    liste = (depart..planetes.size).step((nb_threads-1) * taille_tache).map { |i| i..i+taille_tache }
     puts "la liste de range: #{liste} pour le thread #{k}"
   end
 
