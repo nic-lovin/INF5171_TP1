@@ -249,7 +249,7 @@ class SystemePlanetaire
 
   def calculer_forces_seq
     calculer_forces_par_fj_adj_ij(0, planetes.size-1)
-  #  planetes.map { |planete| calcule_force_planet(planete) }
+    #  planetes.map { |planete| calcule_force_planet(planete) }
   end
 
   def calculer_forces_par_fj_fin
@@ -266,8 +266,8 @@ class SystemePlanetaire
       end
     end
     futures
-      .map(&:value)
-      .reduce (:+)
+    .map(&:value)
+    .reduce (:+)
   end
 
   def calculer_forces_par_fj_adj_ij (i,j)
@@ -280,16 +280,20 @@ class SystemePlanetaire
       PRuby.future do
         bornes = bornes_tranche_taille( k, nb_threads, taille_tache )
         puts "la liste de range: #{bornes} pour le thread #{k}"
-        var =  (bornes.nil? || bornes.empty?) ? 0 : bornes.reduce(0) { |force ,borne| force + calculer_forces_par_fj_adj_ij( borne.begin, borne.end) }
+        var =  (bornes.nil? || bornes.empty?) ? 0 : bornes.reduce(0) do |force ,borne|
+          puts "la borne: #{borne}"
+          puts "la force: #{force}"
+          force + calculer_forces_par_fj_adj_ij( borne.begin, borne.end)
+        end
       end
     end
     futures
-      .map(&:value)
-      .reduce(:+)
+    .map(&:value)
+    .reduce(:+)
   end
 
   def calculer_forces_par_sta
-   #puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
+    #puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
     planetes.pmap(static:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
@@ -303,8 +307,8 @@ class SystemePlanetaire
     planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
     vect
     #planetes
-  #    .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
-  #    .reduce (:+)
+    #    .map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
+    #    .reduce (:+)
   end
 
   def bornes_tranche( k, nb_threads )
@@ -312,13 +316,13 @@ class SystemePlanetaire
   end
 
   def bornes_tranche_taille( k, nb_threads, taille_tache )
-  #  puts "nombre de planetes: #{planetes.size}  nombre de thread #{nb_threads} donc saut de #{(nb_threads-1) * taille_tache}"
+    #  puts "nombre de planetes: #{planetes.size}  nombre de thread #{nb_threads} donc saut de #{(nb_threads-1) * taille_tache}"
     depart = (k)*taille_tache
-  #  return [] if depart >= planetes.size
-  #  puts "le depart: #{depart} pour le thread #{k}"
+    #  return [] if depart >= planetes.size
+    #  puts "le depart: #{depart} pour le thread #{k}"
     liste = (depart...planetes.size).step((nb_threads-1) * taille_tache).map { |i| i...[i+taille_tache, planetes.size].min }
-  #  puts "la liste de range: #{liste} pour le thread #{k}"
-  liste
+    #  puts "la liste de range: #{liste} pour le thread #{k}"
+    liste
   end
 
 
