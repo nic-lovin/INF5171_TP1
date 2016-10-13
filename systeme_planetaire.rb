@@ -262,7 +262,7 @@ class SystemePlanetaire
     futures = (0...nb_threads).map do |k|
       PRuby.future do
         bornes = bornes_tranche( k, nb_threads )
-        calculer_forces_par_fj_adj_ij( bornes.begin, bornes.end -1 )
+        calculer_forces_par_fj_adj_ij( bornes.begin, (bornes.end)-1 )
       end
     end
     futures
