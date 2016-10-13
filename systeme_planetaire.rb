@@ -275,12 +275,20 @@ class SystemePlanetaire
   end
 
   def calculer_forces_par_fj_cyc
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    calculer_forces_seq
+    nb_threads = [PRuby.nb_threads || planetes.size, planetes.size].min
+    futures = (0...nb_threads).map do |k|
+      PRuby.future do
+        bornes = bornes_tranche_taille( k, nb_threads, taille_tache )
+        bornes.each { |borne| calculer_forces_par_fj_adj_ij( borne.begin, borne.end) }
+      end
+    end
+    futures
+      .map(&:value)
+      .reduce (:+)
   end
 
   def calculer_forces_par_sta
-  #  puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
+   puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
     planetes.pmap(static:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
@@ -300,6 +308,12 @@ class SystemePlanetaire
 
   def bornes_tranche( k, nb_threads )
     (k * planetes.size / nb_threads..(k + 1) * planetes.size / nb_threads - 1)
+  end
+
+  def bornes_tranche_taille( k, nb_threads, taille_tache )
+    depart = (k)*taille_tache..(k*taille_tache)+taille_tache
+    liste = (depart..planetes.size).step(nb_threads-1 * taille_tache).map { |i| i..i+taille_tache }
+    puts "la liste de range: #{liste}"
   end
 
 
