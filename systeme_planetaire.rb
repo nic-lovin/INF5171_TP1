@@ -282,6 +282,8 @@ class SystemePlanetaire
         puts "la liste de range: #{bornes} pour le thread #{k}"
         var =  (bornes.nil? || bornes.empty?) ? 0 : bornes.reduce(0) do |force ,borne|
           puts "la borne: #{borne}"
+          puts "la borneUP: #{borne.begin}"
+          puts "la borneDOWN: #{borne.end}"
           puts "la force: #{force}"
           force + calculer_forces_par_fj_adj_ij( borne.begin, borne.end)
         end
