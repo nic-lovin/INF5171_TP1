@@ -349,12 +349,10 @@ class SystemePlanetaire
   end
 
   def deplacer_par_sta( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
+    planetes.peach_index(static:taille_tache) { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
   end
 
   def deplacer_par_dyn( forces, dt )
-    # A REMPLACER PAR LA VERSION PARALLELE.
-    deplacer_seq( forces, dt )
+    planetes.peach_index(dynamic:taille_tache) { |index| planetes[index].deplacer( forces[index], dt ) unless forces[index].nil? }
   end
 end
