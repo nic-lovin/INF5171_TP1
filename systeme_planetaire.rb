@@ -313,7 +313,7 @@ class SystemePlanetaire
 
   def bornes_tranche_taille( k, nb_threads )
     depart = (k)*taille_tache
-    (depart...planetes.size).step((nb_threads-1) * taille_tache).map { |i| i..[i+taille_tache-1, planetes.size-1].min }
+    (depart...planetes.size).step((nb_threads) * taille_tache).map { |i| i..[i+taille_tache-1, planetes.size-1].min }
   end
 
 
