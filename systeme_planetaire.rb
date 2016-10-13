@@ -319,7 +319,7 @@ class SystemePlanetaire
     depart = (k)*taille_tache
     #  return [] if depart >= planetes.size
     #  puts "le depart: #{depart} pour le thread #{k}"
-    liste = (depart...planetes.size).step((nb_threads-1) * taille_tache).map { |i| i...[i+taille_tache, planetes.size].min }
+    liste = (depart...planetes.size).step((nb_threads-1) * taille_tache).map { |i| i..[i+taille_tache-1, planetes.size-1].min }
     #  puts "la liste de range: #{liste} pour le thread #{k}"
     liste
   end
