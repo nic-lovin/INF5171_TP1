@@ -324,7 +324,7 @@ class SystemePlanetaire
   end
 
   def deplacer_par_fj_fin( forces, dt )
-    futures = planetes.each_index.map { |index| PRuby.future {deplacer_planete_index (index, forces, dt)} }
+    futures = planetes.each_index.map { |index| PRuby.future { deplacer_planete_index(index, forces, dt) }
     futures.map(&:value)
   end
 
