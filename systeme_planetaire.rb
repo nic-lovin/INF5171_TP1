@@ -249,7 +249,6 @@ class SystemePlanetaire
 
   def calculer_forces_seq
     calculer_forces_par_fj_adj_ij(0, planetes.size-1)
-    #  planetes.map { |planete| calcule_force_planet(planete) }
   end
 
   def calculer_forces_par_fj_fin
@@ -265,9 +264,7 @@ class SystemePlanetaire
         calculer_forces_par_fj_adj_ij( bornes.begin, bornes.end)
       end
     end
-    futures
-    .map(&:value)
-    .reduce (:+)
+    futures.map(&:value).reduce (:+)
   end
 
   def calculer_forces_par_fj_adj_ij (i,j)
@@ -283,18 +280,14 @@ class SystemePlanetaire
         forces.flatten
       end
     end
-    futures
-    .map(&:value)
-    .reduce(:+)
+    futures.map(&:value).reduce(:+)
   end
 
   def calculer_forces_par_sta
-    #puts "la valeur de taille_tache: #{taille_tache}" if taille_tache == true
     planetes.pmap(static:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
   def calculer_forces_par_dyn
-    # A REMPLACER PAR LA VERSION PARALLELE.
     planetes.pmap(dynamic:taille_tache) { |planete| calcule_force_planet(planete) }
   end
 
