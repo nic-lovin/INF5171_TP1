@@ -295,8 +295,8 @@ class SystemePlanetaire
     #vect = Vector[0, 0] #preduce help
     #planetes.each { |autre| vect += autre.force_de(planete) unless autre.equal?(planete)}
     #vect
-    planetes.reduce(0) { |force, autre| force + autre.force_de(planete) unless autre.equal?(planete)}
-    #    .reduce (:+)
+    p = planetes.map { |autre| autre.force_de(planete) unless autre.equal?(planete)}
+    p.reduce (0, :+)
   end
 
   def bornes_tranche( k, nb_threads )
