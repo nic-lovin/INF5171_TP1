@@ -13,7 +13,7 @@
 
 # Deux etudiants:
 # Si vous etes deux etudiants: Indiquer vos codes permanents.
-CODES_PERMANENTS='ABCD01020304,GHIJ11121314'
+CODES_PERMANENTS='COLG14039400,LAMN19109003'
 
 
 # Un etudiant:
@@ -93,7 +93,7 @@ afficher:
 # Mesures des temps d'execution et generation des graphes.
 ##############################################################
 
-temps_%: 
+temps_%:
 	NB_PLANETES=$* ruby mesurer_temps.rb >fichier_temps_$*.txt
 
 .SECONDARY: fichier_temps_5.txt fichier_temps_10.txt fichier_temps_50.txt fichier_temps_100.txt fichier_temps_150.txt
@@ -127,4 +127,3 @@ remise:
 	PWD=$(shell pwd)
 	ssh oto.labunix.uqam.ca oto rendre_tp tremblay_gu $(BOITE) $(CODES_PERMANENTS) $(PWD)/$(FICHIERS_A_REMETTRE)
 	ssh oto.labunix.uqam.ca oto confirmer_remise tremblay_gu $(BOITE) $(CODES_PERMANENTS)
-
